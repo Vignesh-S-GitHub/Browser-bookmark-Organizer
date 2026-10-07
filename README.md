@@ -1,100 +1,44 @@
-# Browser Categorize Tool
+<div align="center">
 
-A lightweight bookmark manager MVP with browser bookmark import/export, folders, bookmark CRUD, and search.
+# Bookmark Organizer
+### Bring browser bookmarks into one searchable workspace
+
+**Import & export · folders · local AI assistance**
+
+</div>
+
+A bookmark manager for importing browser exports, organizing links into folders, and finding saved pages quickly. Optional in-browser language models can help suggest categories without sending bookmark content to a hosted AI API.
+
+## Features
+
+- Import and export bookmarks in the browser’s HTML format
+- Create folders, add or edit bookmarks, and search your collection
+- Avoid duplicate entries during import
+- Browse bookmarks in a focused workspace
+- Optional local model support through Transformers.js; the first use may download model files
 
 ## Stack
 
-- Frontend: React, Vite, Tailwind CSS
-- Backend: FastAPI
-- Database: SQLite
+| Frontend | Backend | Storage |
+|---|---|---|
+| React, Vite, Tailwind CSS | FastAPI | SQLite |
 
-## Project Layout
+## Run on Windows
 
-```text
-backend/
-  app/
-    main.py              FastAPI routes
-    models.py            SQLAlchemy models
-    schemas.py           API schemas
-    bookmark_parser.py   Netscape bookmark HTML import/export
-frontend/
-  src/
-    App.tsx              Main bookmark workspace
-    api.ts               API client
-```
-
-## Run Backend
-
-Simplest option on Windows:
+The repository includes a launcher that starts both app parts and opens the frontend:
 
 ```powershell
-.\run-app.bat
+./run-app.bat
 ```
 
-That starts the backend and frontend, then opens the app at `http://localhost:5173`.
+The frontend is available at `http://localhost:5173`; the backend API runs at `http://localhost:8000`. For manual setup, see the backend and frontend directories for their respective requirements and scripts.
 
-To stop both servers:
+## Project structure
 
-```powershell
-.\stop-app.bat
-```
+- `frontend/` — React bookmark workspace and client-side features
+- `backend/` — FastAPI routes, SQLite models, and bookmark import/export parsing
+- `run-app.bat` / `run-app.ps1` — Windows development launchers
 
-Manual backend command:
+---
 
-```powershell
-cd backend
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-```
-
-The API runs at `http://localhost:8000`.
-
-## Run Frontend
-
-```powershell
-cd frontend
-npm install
-npm run dev
-```
-
-The app runs at `http://localhost:5173`.
-
-## MVP Features
-
-- Import browser bookmarks from HTML exports
-- Skip duplicate bookmarks during import
-- Clear the existing library before importing a new bookmark HTML file
-- View nested folder hierarchy
-- Create and delete folders
-- Create and delete bookmarks
-- Search bookmarks by title, URL, and notes
-- Export bookmarks back to Netscape-compatible HTML
-
-## Stage 2 UX Features
-
-- Drag folders onto other folders to move them
-- Switch between list and grid views
-- Toggle dark mode
-- Favicon and thumbnail previews for bookmarks
-- Infinite scrolling with a fallback load-more button
-- Keyboard shortcuts for search, new bookmark, view mode, theme, and clear
-
-## Browser-Local LLM Features
-
-These features run in the user's browser with Transformers.js. No backend API key is required.
-The first run downloads the selected quantized model into the browser cache.
-
-- Model choices include SmolLM2 135M, SmolLM2 360M, Qwen2.5 0.5B, TinyLlama 1.1B, and Llama 3.2 1B
-- Local JSON suggestions for folder category, tags, and summary
-- Apply local LLM suggestions to create folders and update bookmarks
-- Duplicate detection by URL and similar title/domain
-- Duplicate blocking when saving or importing the same bookmark again
-
-## Next Stage Candidates
-
-- Edit forms for existing bookmarks and folders
-- Authentication and sync
-- Real LLM/embedding integration with OpenAI or local embedding models
-- Reader mode and saved article content
+<p align="center"><sub>Keep the useful links. Find them when you need them.</sub></p>
