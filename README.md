@@ -2,128 +2,97 @@
 
 # 🔖 Bookmark Organizer
 
-### Bring saved links into one searchable workspace
+**One searchable workspace for your saved links.**
 
-**React · Vite · Tailwind CSS · FastAPI · SQLite · Browser-local AI**
+![React](https://img.shields.io/badge/React-149ECA?style=flat-square&logo=react&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)
 
-[Setup](#run-backend) · [Features](#mvp-features) · [Local AI](#browser-local-llm-features) · [Roadmap](#next-stage-candidates)
+[Quick start](#quick-start) · [Features](#features) · [Local AI](#local-ai-and-storage)
 
 </div>
 
-A lightweight bookmark manager for importing browser HTML exports, arranging folders, managing saved links, and searching by title, URL, or notes. Optional local language models suggest categories, tags, and summaries in the browser.
+---
+
+Import a browser HTML bookmark export, arrange links into nested folders, search your collection, and export it again. A React/TypeScript frontend connects to a local FastAPI + SQLite backend. Optional browser language models suggest categories, tags, and summaries.
+
+<a id="features"></a>
+
+## ✨ Features
 
 | Organize | Find | Move your collection |
 |---|---|---|
-| Nested folders, bookmark creation/deletion, and drag-to-move folders | Search, list/grid views, dark mode, previews, and local AI suggestions | Import/export Netscape-compatible HTML with duplicate checks |
+| Nested folders and folder drag-to-move | Search titles, URLs, descriptions, tags, and summaries | Netscape-compatible HTML import/export |
+| Create/delete bookmarks and folders | List/grid views, themes, previews, and shortcuts | Duplicate URL checks when importing or saving |
+| Apply category/tag/summary suggestions | Local matching and duplicate-group inspection | Reset the library before a fresh import when needed |
 
-## Prerequisites
+<a id="quick-start"></a>
 
-- Python compatible with the backend requirements
-- Node.js and npm for the Vite frontend
-- A modern browser; optional local models require an initial download and sufficient device resources
+## 🚀 Quick start
 
-## Stack
+Requirements: Python **3.10+** for the source syntax, Node.js compatible with Vite 6, and npm. The repository does not pin a Node engine.
 
-- Frontend: React, Vite, Tailwind CSS
-- Backend: FastAPI
-- Database: SQLite
-
-## Project Layout
-
-```text
-backend/
-  app/
-    main.py              FastAPI routes
-    models.py            SQLAlchemy models
-    schemas.py           API schemas
-    bookmark_parser.py   Netscape bookmark HTML import/export
-frontend/
-  src/
-    App.tsx              Main bookmark workspace
-    api.ts               API client
+```bash
+git clone https://github.com/Vignesh-S-GitHub/Browser-bookmark-Organizer.git
+cd Browser-bookmark-Organizer
 ```
 
-## Run Backend
+**Backend — first terminal:**
 
-Simplest option on Windows:
-
-```powershell
-.\run-app.bat
-```
-
-That starts the backend and frontend, then opens the app at `http://localhost:5173`.
-
-To stop both servers:
-
-```powershell
-.\stop-app.bat
-```
-
-Manual backend command:
-
-```powershell
+```bash
 cd backend
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+# macOS / Linux; Windows: .venv\Scripts\activate
+source .venv/bin/activate
+python -m pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-The API runs at `http://localhost:8000`.
+API: **http://localhost:8000** · Interactive API docs: **http://localhost:8000/docs**.
 
-## Run Frontend
+**Frontend — second terminal, from the repository root:**
 
-```powershell
+```bash
 cd frontend
-npm install
+npm ci
 npm run dev
 ```
 
-The app runs at `http://localhost:5173`.
+Open **http://localhost:5173**. On Windows, [run-app.bat](run-app.bat) starts both services and [stop-app.bat](stop-app.bat) stops them.
 
-## MVP Features
+<a id="local-ai-and-storage"></a>
 
-- Import browser bookmarks from HTML exports
-- Skip duplicate bookmarks during import
-- Clear the existing library before importing a new bookmark HTML file
-- View nested folder hierarchy
-- Create and delete folders
-- Create and delete bookmarks
-- Search bookmarks by title, URL, and notes
-- Export bookmarks back to Netscape-compatible HTML
+## 🤖 Local AI and storage
 
-## Stage 2 UX Features
+- SQLite stores the library in `bookmarks.db`, relative to the backend's working directory. Keep an HTML export and, if needed, a database backup before resetting.
+- The backend's built-in categorization and matching use local rules. Optional Transformers.js text-generation models run in a browser worker, trying WebGPU and then WASM.
+- The first model run downloads weights to the browser cache; it needs internet and sufficient device resources. No hosted generation API key is required.
+- Favicon and thumbnail previews can request external services. Local inference does not make every network feature offline.
+- This local MVP has no account authentication or cloud synchronization.
 
-- Drag folders onto other folders to move them
-- Switch between list and grid views
-- Toggle dark mode
-- Favicon and thumbnail previews for bookmarks
-- Infinite scrolling with a fallback load-more button
-- Keyboard shortcuts for search, new bookmark, view mode, theme, and clear
+## 🧪 Development
 
-## Browser-Local LLM Features
+```bash
+cd frontend
+npm run build
+```
 
-These features run in the user's browser with Transformers.js. No backend API key is required.
-The first run downloads the selected quantized model into the browser cache.
+The build runs TypeScript checking and Vite. No automated test suite is currently included. Backend PATCH endpoints exist for editing bookmarks/folders; richer editing forms remain a UI development opportunity.
 
-- Model choices include SmolLM2 135M, SmolLM2 360M, Qwen2.5 0.5B, TinyLlama 1.1B, and Llama 3.2 1B
-- Local JSON suggestions for folder category, tags, and summary
-- Apply local LLM suggestions to create folders and update bookmarks
-- Duplicate detection by URL and similar title/domain
-- Duplicate blocking when saving or importing the same bookmark again
+## 📁 Repository guide
 
-## Next Stage Candidates
+| Path | Purpose |
+|---|---|
+| [backend/app/main.py](backend/app/main.py) | CRUD, import/export, search, and enrichment routes |
+| [backend/app/bookmark_parser.py](backend/app/bookmark_parser.py) | Browser HTML parsing and rendering |
+| [backend/app/ai_tools.py](backend/app/ai_tools.py) | Local matching and enrichment helpers |
+| [frontend/src/App.tsx](frontend/src/App.tsx) | Bookmark workspace |
+| [frontend/src/localLlmWorker.ts](frontend/src/localLlmWorker.ts) | Browser model loading and inference |
 
-- Edit forms for existing bookmarks and folders
-- Authentication and sync
-- Additional LLM/embedding integrations and richer retrieval
-- Reader mode and saved article content
-## Storage and model behavior
+## 🤝 Contributing
 
-The FastAPI backend uses SQLite for the bookmark library. Browser-local model downloads are cached by the browser; their availability and performance depend on the device. Bookmark content used by these optional models is processed locally rather than sent to a hosted AI API. Export HTML when moving your library or keeping a portable copy.
+Open an issue with a reproducible example or submit a focused pull request. Keep setup instructions and documentation aligned with any behavior changes.
 
-The current repository is an MVP with the Stage 2 and browser-local model features listed above. Authentication, cloud sync, and the next-stage items remain development candidates.
+## 📄 License
 
----
-
-<p align="center"><sub>Keep useful links. Find them when you need them.</sub></p>
+No repository-level `LICENSE` file is currently included.
